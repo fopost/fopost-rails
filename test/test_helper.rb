@@ -70,7 +70,7 @@ ActionDispatch::IntegrationTest.app = DummyApp
 
 # The parent SDK owns the version prefix on every request path. Tests match on
 # the resource suffix so they survive the prefix moving.
-API_VERSION_PREFIX = %r{\A(?:/api)?/v\d+}.freeze
+API_VERSION_PREFIX = %r{\A(?:/api)?/v\d+}
 
 # A transport that answers from a script instead of the network.
 class StubTransport
