@@ -1,0 +1,35 @@
+# frozen_string_literal: true
+
+# FoPost — https://fopost.com/docs
+#
+# Every setting below falls back on its own, in this order: what you set here,
+# then Rails credentials under `fopost:`, then the environment. Leave a line
+# commented to take the fallback.
+Fopost::Rails.configure do |config|
+  # Create a key at https://app.fopost.com/api-keys.
+  # Falls back to credentials `fopost: api_key:`, then ENV['FOPOST_API_KEY'].
+  # config.api_key = nil
+
+  # config.base_url = 'https://api.fopost.com/api/v1'
+  # config.timeout = 30.0
+  # config.max_retries = 3
+
+  # Used by CreatePostJob when no workspace is passed.
+  # config.default_workspace_id = nil
+
+  # Shown once, when you create a webhook. Required by the mounted endpoint.
+  # config.webhook_secret = nil
+
+  # ActiveJob queue for PublishJob and CreatePostJob.
+  # config.queue_name = 'default'
+end
+
+# To receive webhooks, mount the engine in config/routes.rb:
+#
+#   mount Fopost::Rails::Engine => '/fopost'
+#
+# then point a webhook at https://your-app.example/fopost/webhooks and subscribe:
+#
+#   ActiveSupport::Notifications.subscribe('fopost.post.published') do |*, payload|
+#     Rails.logger.info("FoPost published: #{payload[:data]}")
+#   end
