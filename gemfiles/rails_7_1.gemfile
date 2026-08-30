@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gemspec path: '..'
+
+# The parent SDK is not on RubyGems yet. Delete once it is published.
+gem 'fopost', github: 'fopost/fopost-ruby'
+
+gem 'rails', '~> 7.1.0'
+
+gem 'minitest', '~> 5.20'
+gem 'rake', '~> 13.0'
+
+# Rails 7.0/7.1 assume concurrent-ruby still requires logger for them.
+gem 'concurrent-ruby', '< 1.3.5'

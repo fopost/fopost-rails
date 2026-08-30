@@ -1,0 +1,40 @@
+AllCops:
+  TargetRubyVersion: 3.1
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - vendor/**/*
+    - gemfiles/**/*
+    - lib/generators/**/templates/**/*
+
+plugins:
+  - rubocop-minitest
+
+Layout/LineLength:
+  Max: 120
+
+Metrics:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FetchEnvVar:
+  Enabled: false
+
+Minitest/MultipleAssertions:
+  Enabled: false
+
+# The gem name carries a dash, so its entry point has to as well.
+Naming/FileName:
+  Exclude:
+    - lib/fopost-rails.rb
+
+# `Rails` means `Fopost::Rails` inside this gem, so `::Rails` is spelled out
+# everywhere rather than only where the parser insists on it.
+Style/RedundantConstantBase:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Exclude:
+    - test/test_helper.rb
