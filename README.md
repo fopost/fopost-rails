@@ -62,7 +62,7 @@ Every setting resolves the same way — **what you set explicitly wins, then Rai
 | Setting | Credentials key | Environment | Default |
 | --- | --- | --- | --- |
 | `api_key` | `fopost: api_key:` | `FOPOST_API_KEY` | none, required |
-| `base_url` | `base_url` | `FOPOST_BASE_URL` | `https://api.fopost.com/api/v1` |
+| `base_url` | `base_url` | `FOPOST_BASE_URL` | `https://api.fopost.com/v1` |
 | `timeout` | `timeout` | `FOPOST_TIMEOUT` | `30.0` |
 | `max_retries` | `max_retries` | `FOPOST_MAX_RETRIES` | `3` |
 | `default_workspace_id` | `default_workspace_id` | `FOPOST_WORKSPACE_ID` | none |

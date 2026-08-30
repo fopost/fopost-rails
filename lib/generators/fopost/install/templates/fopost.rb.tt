@@ -10,7 +10,7 @@ Fopost::Rails.configure do |config|
   # Falls back to credentials `fopost: api_key:`, then ENV['FOPOST_API_KEY'].
   # config.api_key = nil
 
-  # config.base_url = 'https://api.fopost.com/api/v1'
+  # config.base_url = 'https://api.fopost.com/v1'
   # config.timeout = 30.0
   # config.max_retries = 3
 

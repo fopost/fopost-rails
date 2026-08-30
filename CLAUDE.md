@@ -79,7 +79,7 @@ API call in a job with `with_retry_after`.
 ## API Contract
 
 Owned by the `fopost` gem, repeated here only so a change is recognised as belonging there:
-`X-API-Key` header (not Bearer), base URL `https://api.fopost.com/api/v1`, 30s timeout, 3 attempts
+`X-API-Key` header (not Bearer), base URL `https://api.fopost.com/v1`, 30s timeout, 3 attempts
 retrying `429`/`5xx` with `Retry-After` honoured, `{"data": …}` success envelope and
 `{"error": …, "message": …}` errors.
 
