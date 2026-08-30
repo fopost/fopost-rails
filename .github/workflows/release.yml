@@ -1,0 +1,62 @@
+name: Release
+
+# Tag the commit as v<version>, matching lib/fopost/rails/version.rb, e.g. v0.1.0.
+# Publishing uses RubyGems trusted publishing — configure the publisher for
+# fopost/fopost-rails on rubygems.org before the first tag. No API key secret is
+# needed; see CLAUDE.md for the rubygems.org-side setup.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Gates publishing behind a dedicated environment, so commit access alone
+    # does not grant the ability to push a release to RubyGems.
+    environment:
+      name: rubygems
+      url: https://rubygems.org/gems/fopost-rails
+    permissions:
+      contents: read
+      id-token: write # RubyGems trusted publishing
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Verify tag matches the gem version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION=$(ruby -Ilib -e 'require "fopost/rails/version"; print Fopost::Rails::VERSION')
+          [ "$VERSION" = "$TAG" ] || { echo "::error::version.rb is $VERSION but tag is $TAG"; exit 1; }
+
+      - run: bundle exec rubocop
+      - run: bundle exec rake test
+
+      - run: gem build fopost-rails.gemspec
+
+      # `gem install` cannot resolve the built gem until the parent SDK is on
+      # RubyGems, so the smoke test loads it from the bundle instead.
+      - name: Smoke test the entry point
+        run: |
+          bundle exec ruby -Ilib -e "
+          require 'rails'
+          require 'fopost/rails'
+          raise 'engine missing' unless defined?(Fopost::Rails::Engine)
+          raise 'railtie missing' unless defined?(Fopost::Rails::Railtie)
+          raise 'jobs missing' unless Fopost::Rails::PublishJob && Fopost::Rails::CreatePostJob
+          puts 'require ok'
+          "
+
+      - uses: rubygems/release-gem@v1
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
