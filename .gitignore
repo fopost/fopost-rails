@@ -1,0 +1,16 @@
+/.bundle/
+/vendor/bundle/
+/pkg/
+/doc/
+/coverage/
+/tmp/
+*.gem
+Gemfile.lock
+gemfiles/*.lock
+.ruby-version
+.rubocop_cache/
+.DS_Store
+/test/dummy/config/master.key
+/test/dummy/config/credentials.yml.enc
+/test/dummy/log/
+/test/dummy/tmp/
