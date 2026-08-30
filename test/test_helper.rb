@@ -68,6 +68,10 @@ require 'rails/generators/test_case'
 
 ActionDispatch::IntegrationTest.app = DummyApp
 
+# The parent SDK owns the version prefix on every request path. Tests match on
+# the resource suffix so they survive the prefix moving.
+API_VERSION_PREFIX = %r{\A(?:/api)?/v\d+}.freeze
+
 # A transport that answers from a script instead of the network.
 class StubTransport
   include Fopost::HTTP::Transport
@@ -112,7 +116,7 @@ class StubTransport
   private
 
   def key(method, path)
-    [method.to_s.upcase, path.sub(%r{\A/api/v1}, '')]
+    [method.to_s.upcase, path.sub(API_VERSION_PREFIX, '')]
   end
 end
 
@@ -134,6 +138,11 @@ module FopostTestHelpers
 
   def transport
     @transport ||= StubTransport.new
+  end
+
+  # A request path with the SDK's version prefix removed.
+  def resource_path(path)
+    path.sub(API_VERSION_PREFIX, '')
   end
 
   # A client wired to the stub transport, with the SDK's own 429 retry off so a

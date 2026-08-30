@@ -27,7 +27,7 @@ class JobsTest < ActiveSupport::TestCase
 
     Fopost::Rails::PublishJob.perform_now('post_1')
 
-    assert_equal '/api/v1/posts/post_1/publish', transport.last.path
+    assert_equal '/posts/post_1/publish', resource_path(transport.last.path)
   end
 
   def test_create_post_job_creates_and_can_publish
@@ -46,7 +46,7 @@ class JobsTest < ActiveSupport::TestCase
     assert_equal 'ws_default', created['workspace_id']
     assert_equal [{ 'text' => 'Hello from Rails' }], created['content']
     assert_equal ['acc_1'], created['accounts']
-    assert_equal '/api/v1/posts/post_1/publish', transport.last.path
+    assert_equal '/posts/post_1/publish', resource_path(transport.last.path)
   end
 
   def test_create_post_job_needs_a_workspace

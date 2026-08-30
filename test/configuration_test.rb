@@ -24,10 +24,10 @@ class ConfigurationTest < ActiveSupport::TestCase
   end
 
   def test_the_environment_answers_what_credentials_do_not_carry
-    ENV['FOPOST_BASE_URL'] = 'https://api.test.fopost.com/api/v1'
+    ENV['FOPOST_BASE_URL'] = 'https://api.test.fopost.com/v1'
     ENV['FOPOST_WEBHOOK_SECRET'] = 'whsec_from_env'
 
-    assert_equal 'https://api.test.fopost.com/api/v1', config.base_url
+    assert_equal 'https://api.test.fopost.com/v1', config.base_url
     assert_equal 'whsec_from_env', config.webhook_secret
   end
 

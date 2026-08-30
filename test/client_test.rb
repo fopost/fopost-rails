@@ -19,10 +19,10 @@ class ClientTest < ActiveSupport::TestCase
   def test_the_client_is_built_from_the_configuration
     Fopost::Rails.configure do |config|
       config.api_key = 'fp_explicit'
-      config.base_url = 'https://api.test.fopost.com/api/v1'
+      config.base_url = 'https://api.test.fopost.com/v1'
     end
 
-    assert_equal 'https://api.test.fopost.com/api/v1', Fopost::Rails.client.base_url
+    assert_equal 'https://api.test.fopost.com/v1', Fopost::Rails.client.base_url
   end
 
   def test_configure_drops_a_client_built_from_older_settings
