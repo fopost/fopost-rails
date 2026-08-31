@@ -22,7 +22,7 @@ module Fopost
             bin/rails credentials:edit     # fopost: { api_key: fp_... }
             # or export FOPOST_API_KEY=fp_...
 
-          Create a key at https://app.fopost.com/api-keys.
+          Create a key at https://fopost.com/dashboard/api-keys.
         TEXT
       end
     end

@@ -6,7 +6,7 @@
 # then Rails credentials under `fopost:`, then the environment. Leave a line
 # commented to take the fallback.
 Fopost::Rails.configure do |config|
-  # Create a key at https://app.fopost.com/api-keys.
+  # Create a key at https://fopost.com/dashboard/api-keys.
   # Falls back to credentials `fopost: api_key:`, then ENV['FOPOST_API_KEY'].
   # config.api_key = nil
 

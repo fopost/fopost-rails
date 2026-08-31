@@ -36,7 +36,7 @@ bin/rails generate fopost:install
 
 ## Configure
 
-Create an API key at [app.fopost.com/api-keys](https://app.fopost.com/api-keys) and put it
+Create an API key at [fopost.com/dashboard/api-keys](https://fopost.com/dashboard/api-keys) and put it
 somewhere the app can read it:
 
 ```bash
@@ -223,7 +223,7 @@ separate on purpose and never depend on each other.
 ## Links
 
 - Documentation: [fopost.com/docs](https://fopost.com/docs)
-- API keys: [app.fopost.com/api-keys](https://app.fopost.com/api-keys)
+- API keys: [fopost.com/dashboard/api-keys](https://fopost.com/dashboard/api-keys)
 - The SDK this wraps: [`fopost`](https://github.com/fopost/fopost-ruby)
 - Issues: [github.com/fopost/fopost-rails/issues](https://github.com/fopost/fopost-rails/issues)
 - Support: [fopost.com/contact](https://fopost.com/contact)
