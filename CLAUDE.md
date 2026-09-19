@@ -85,17 +85,17 @@ retrying `429`/`5xx` with `Retry-After` honoured, `{"data": …}` success envelo
 
 ## Parent dependency
 
-`fopost` is **not on RubyGems yet**. The gemspec declares the normal released coordinate
-(`add_dependency 'fopost', '~> 0.1'`) because that is what ships, and the `Gemfile` and every
-`gemfiles/*.gemfile` resolve it from source instead:
+`fopost` is on RubyGems. The gemspec declares the normal released coordinate
+(`add_dependency 'fopost', '~> 0.1'`), which resolves from RubyGems. The `Gemfile` and every
+`gemfiles/*.gemfile` still resolve it from source:
 
 ```ruby
 gem 'fopost', github: 'fopost/fopost-ruby'
 ```
 
-**Delete those lines once `fopost` is published** — the gemspec needs no change. Until then,
-`gem install fopost-rails` cannot resolve, which is why the release workflow smoke-tests the entry
-point under `bundle exec` rather than installing the built gem.
+Those lines are a leftover and no longer needed now that the parent is published; the gemspec
+needs no change. The release workflow's "Smoke test the entry point" step still loads the gem under
+`bundle exec` rather than installing the built gem; that workaround is no longer needed either.
 
 ## Commands
 
