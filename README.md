@@ -88,7 +88,7 @@ config.fopost.default_workspace_id = 'ws_...'
 
 `Fopost::Rails.client` is a configured `Fopost::Client`, memoized and safe to call from any
 thread. The [`fopost` gem README](https://github.com/fopost/fopost-ruby) documents the full
-resource surface — `posts`, `accounts`, `workspaces`, `labels`, `ai`.
+resource surface — `posts`, `accounts`, `workspaces`, `labels`, `ai`, `media`.
 
 ```ruby
 class PostsController < ApplicationController
