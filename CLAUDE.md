@@ -33,6 +33,7 @@ lib/fopost/rails/publish_job.rb         PublishJob
 lib/fopost/rails/create_post_job.rb     CreatePostJob
 lib/generators/fopost/install/          rails generate fopost:install
 app/controllers/fopost/rails/webhooks_controller.rb
+app/controllers/fopost/rails/articles_controller.rb   blog website target, verified by Fopost::Webhooks
 config/routes.rb                        the engine's own routes
 ```
 
@@ -69,6 +70,11 @@ sign a request. If the API's scheme ever changes, this gem changes with it; neve
 Events: `post.published`, `post.failed`, `post.partially_failed`, `delivery.published`,
 `delivery.failed`, `delivery.delayed`, `account.health_changed`.
 
+The blog's website target (`article.published`, `article.test`) lands on `/fopost/articles` and is
+verified by the parent's `Fopost::Webhooks.verify` (timestamped `X-FoPost-Signature-256`, 300 s
+tolerance), keyed by `website_secret` with `webhook_secret` as the fallback. Never add a second
+verifier here.
+
 ### Rate-limit retries
 
 `ActiveJob`'s `retry_on` hands its `wait:` proc the attempt count and nothing else, so
@@ -92,6 +98,9 @@ retrying `429`/`5xx` with `Retry-After` honoured, `{"data": …}` success envelo
 ```ruby
 gem 'fopost', github: 'fopost/fopost-ruby'
 ```
+
+While a parent feature is unreleased, add `branch: '<its branch>'` to that line and drop it again
+once the parent release is tagged (blog articles: `feature/blog-articles`).
 
 **Delete those lines once `fopost` is published** — the gemspec needs no change. Until then,
 `gem install fopost-rails` cannot resolve, which is why the release workflow smoke-tests the entry

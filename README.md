@@ -67,6 +67,7 @@ Every setting resolves the same way — **what you set explicitly wins, then Rai
 | `max_retries` | `max_retries` | `FOPOST_MAX_RETRIES` | `3` |
 | `default_workspace_id` | `default_workspace_id` | `FOPOST_WORKSPACE_ID` | none |
 | `webhook_secret` | `webhook_secret` | `FOPOST_WEBHOOK_SECRET` | none |
+| `website_secret` | `website_secret` | `FOPOST_WEBSITE_SECRET` | falls back to `webhook_secret` |
 | `queue_name` | `queue_name` | `FOPOST_QUEUE` | `default` |
 
 Set them in the initializer:
@@ -88,7 +89,7 @@ config.fopost.default_workspace_id = 'ws_...'
 
 `Fopost::Rails.client` is a configured `Fopost::Client`, memoized and safe to call from any
 thread. The [`fopost` gem README](https://github.com/fopost/fopost-ruby) documents the full
-resource surface — `posts`, `accounts`, `workspaces`, `labels`, `ai`.
+resource surface — `posts`, `accounts`, `workspaces`, `labels`, `ai`, `blog`.
 
 ```ruby
 class PostsController < ApplicationController
@@ -202,6 +203,49 @@ post '/fopost/webhooks',
        'X-FoPost-Signature' => Fopost::Rails::WebhookSignature.sign(body, secret)
      }
 ```
+
+## Receive blog articles
+
+The same engine mount also serves `POST /fopost/articles`, the receiver for the blog's **Website**
+target. Set that target to `https://your-app.example/fopost/articles`, copy the website secret it
+shows you once into `config.website_secret`, and hand FoPost a callback:
+
+```ruby
+# config/initializers/fopost.rb
+Fopost::Rails.configure do |config|
+  config.website_secret = Rails.application.credentials.dig(:fopost, :website_secret)
+
+  config.on_article_published = lambda do |article|
+    record = Article.create!(
+      title: article.title,
+      slug: article.slug,
+      body: article.body_html,
+      excerpt: article.excerpt,
+      tags: article.tags,
+      published_at: article.published_at
+    )
+    Rails.application.routes.url_helpers.article_url(record)
+  end
+end
+```
+
+`article` is a `Fopost::BlogArticlePublished` from the `fopost` gem: `title`, `slug`, `excerpt`,
+`meta_title`, `meta_description`, `body_markdown`, `body_html`, `featured_image`, `images`, `tags`,
+`keyword`, `word_count`, `published_at`. Image URLs stay fetchable for six hours, so store your own
+copy. Return the URL the article now lives at and the receiver answers `{ "url": "..." }`; return
+anything else and it answers `{ "ok": true }`.
+
+Prefer events? Every verified `article.published` also fires
+`ActiveSupport::Notifications.instrument('fopost.article.published', ...)` with `:article`, `:data`,
+`:timestamp` and `:delivery_id`, whether or not a callback is set.
+
+Verification is the `fopost` gem's `Fopost::Webhooks.verify`: the timestamped
+`X-FoPost-Signature-256` over the raw body, rejected outside a 300 second window. A bad signature
+is a `401` and the callback never runs; a test delivery (`article.test`) answers `{ "ok": true }`.
+To sign one yourself in a request spec, use `Fopost::Webhooks.sign("#{timestamp}.#{body}", secret)`.
+
+Managing the blog itself (settings, keywords, articles) is `Fopost::Rails.client.blog`, documented
+in the [`fopost` gem README](https://github.com/fopost/fopost-ruby#blog).
 
 ## Testing your app
 
