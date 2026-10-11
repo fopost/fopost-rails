@@ -15,7 +15,7 @@ module Fopost
     #   end
     class Configuration
       SETTINGS = %i[
-        api_key base_url timeout max_retries default_workspace_id webhook_secret queue_name
+        api_key base_url timeout max_retries default_workspace_id webhook_secret website_secret queue_name
       ].freeze
 
       ENV_KEYS = {
@@ -25,6 +25,7 @@ module Fopost
         max_retries: 'FOPOST_MAX_RETRIES',
         default_workspace_id: 'FOPOST_WORKSPACE_ID',
         webhook_secret: 'FOPOST_WEBHOOK_SECRET',
+        website_secret: 'FOPOST_WEBSITE_SECRET',
         queue_name: 'FOPOST_QUEUE'
       }.freeze
 
@@ -36,6 +37,11 @@ module Fopost
       }.freeze
 
       attr_writer(*SETTINGS)
+
+      # Called with a Fopost::BlogArticlePublished for every verified
+      # `article.published` delivery. Return the URL the article now lives at
+      # and the receiver echoes it back to FoPost.
+      attr_accessor :on_article_published
 
       def api_key
         resolve(:api_key)
@@ -65,6 +71,12 @@ module Fopost
         resolve(:webhook_secret)
       end
 
+      # The blog's website secret, shown once when the website target is set.
+      # The article receiver falls back to `webhook_secret` when it is unset.
+      def website_secret
+        resolve(:website_secret)
+      end
+
       def queue_name
         resolve(:queue_name)
       end
@@ -83,6 +95,7 @@ module Fopost
       # Drop every explicit value, so the next read falls back again.
       def reset!
         SETTINGS.each { |key| instance_variable_set(:"@#{key}", nil) }
+        @on_article_published = nil
         self
       end
 
@@ -92,7 +105,9 @@ module Fopost
 
       # Keeps the key out of logs and consoles.
       def inspect
-        redacted = to_h.merge(api_key: mask(api_key), webhook_secret: mask(webhook_secret))
+        redacted = to_h.merge(
+          api_key: mask(api_key), webhook_secret: mask(webhook_secret), website_secret: mask(website_secret)
+        )
         "#<Fopost::Rails::Configuration #{redacted.map { |k, v| "#{k}=#{v.inspect}" }.join(' ')}>"
       end
 
