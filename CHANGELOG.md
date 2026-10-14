@@ -4,6 +4,15 @@ All notable changes to this gem are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the gem follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `POST /fopost/articles` on the mounted engine receives the blog's website target. The `fopost`
+  gem verifies the signature; `article.published` reaches `config.on_article_published` and the
+  `fopost.article.published` notification, and a returned URL is echoed as `{ "url": ... }`.
+- `website_secret` setting (`FOPOST_WEBSITE_SECRET`), falling back to `webhook_secret`.
+
 ## [0.1.0] - 2026-08-30
 
 Initial release.

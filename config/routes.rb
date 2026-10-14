@@ -2,6 +2,7 @@
 
 Fopost::Rails::Engine.routes.draw do
   post '/webhooks', to: 'webhooks#create', as: :webhooks
+  post '/articles', to: 'articles#create', as: :articles
 
   # So mounting straight onto the endpoint path also works:
   #   mount Fopost::Rails::Engine => '/fopost/webhooks'

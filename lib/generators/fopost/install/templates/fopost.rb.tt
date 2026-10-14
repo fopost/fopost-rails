@@ -20,6 +20,13 @@ Fopost::Rails.configure do |config|
   # Shown once, when you create a webhook. Required by the mounted endpoint.
   # config.webhook_secret = nil
 
+  # Shown once, when you set the blog's website target. Used by /fopost/articles;
+  # falls back to webhook_secret.
+  # config.website_secret = nil
+
+  # Receives a Fopost::BlogArticlePublished; return the URL you published it at.
+  # config.on_article_published = ->(article) { Article.import!(article).url }
+
   # ActiveJob queue for PublishJob and CreatePostJob.
   # config.queue_name = 'default'
 end
