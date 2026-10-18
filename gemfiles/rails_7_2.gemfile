@@ -4,9 +4,6 @@ source 'https://rubygems.org'
 
 gemspec path: '..'
 
-# The parent SDK is not on RubyGems yet. Delete once it is published.
-gem 'fopost', github: 'fopost/fopost-ruby', branch: 'feature/blog-articles'
-
 gem 'rails', '~> 7.2.0'
 
 gem 'minitest', '~> 5.20'
