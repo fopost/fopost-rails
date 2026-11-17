@@ -5,7 +5,6 @@
 /coverage/
 /tmp/
 *.gem
-Gemfile.lock
 gemfiles/*.lock
 .ruby-version
 .rubocop_cache/
